@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>مواقع فروع شركة تونة | Tuna Company Branches</title>
+
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;700;900&display=swap');
+:root{
+  --bg:#f7f6f2; --surface:#fff; --border:#e8e4dc;
+  --t1:#111; --t2:#444; --t3:#888;
+  --gold:#b8962e; --gold-bg:#fdf6e3; --gold-bdr:#e5d090;
+  --green:#25D366; --r:14px;
+  --cr:#d4922a; --cj:#2a7fd4; --ce:#d4342a; --cq:#2ab542;
+}
+*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html[dir=rtl] body { font-family:'Tajawal',sans-serif; }
+html[dir=ltr] body { font-family:'Inter',sans-serif; }
+body { background:var(--bg); color:var(--t1); min-height:100vh; }
+
+/* LANG BTN */
+.lang-btn{
+  position:fixed; top:14px; left:14px; z-index:9000;
+  background:rgba(255,255,255,0.97); border:1.5px solid var(--border);
+  color:var(--t1); padding:7px 14px; border-radius:100px;
+  font-size:13px; font-weight:700; cursor:pointer;
+  box-shadow:0 2px 14px rgba(0,0,0,0.13);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  font-family:inherit; display:flex; align-items:center; gap:6px;
+}
+
+/* HERO */
+.hero{ background:#1a1610; padding:44px 20px 30px; text-align:center; }
+.tag{
+  display:inline-block; background:rgba(184,150,46,0.18);
+  border:1px solid rgba(184,150,46,0.4); color:#e8c460;
+  font-size:12px; letter-spacing:1.2px; padding:5px 16px;
+  border-radius:100px; margin-bottom:14px;
+}
+.hero h1{ font-size:28px; font-weight:900; color:#fff; margin-bottom:6px; }
+.hero h1 em{ color:#e8c460; font-style:normal; }
+.hero p{ color:#aaa; font-size:14px; margin-bottom:22px; }
+.stats{
+  display:inline-flex; border:1px solid #2e2a22; border-radius:14px;
+  overflow:hidden; margin-bottom:22px; background:#231f18;
+}
+.stat{ padding:11px 22px; border-left:1px solid #2e2a22; text-align:center; }
+.stat:last-child{ border-left:none; }
+html[dir=ltr] .stat{ border-left:none; border-right:1px solid #2e2a22; }
+html[dir=ltr] .stat:last-child{ border-right:none; }
+.sn{ font-size:24px; font-weight:900; color:#e8c460; line-height:1; }
+.sl{ font-size:11px; color:#777; margin-top:3px; }
+.top-btns{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.btn-wa{
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--green); color:#fff; border:none;
+  padding:11px 20px; border-radius:100px;
+  font-family:inherit; font-size:14px; font-weight:700; cursor:pointer;
+}
+.btn-copy{
+  display:inline-flex; align-items:center; gap:7px;
+  background:transparent; color:#e8c460;
+  border:1.5px solid rgba(232,196,96,0.4);
+  padding:11px 20px; border-radius:100px;
+  font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;
+}
+
+/* MAP */
+.map-outer{ max-width:960px; margin:24px auto 0; padding:0 16px; }
+.map-wrap{
+  border-radius:16px; overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 4px 24px rgba(0,0,0,0.10);
+  height:440px; position:relative;
+}
+#map{ width:100%; height:100%; display:block; }
+
+.leaflet-popup-content-wrapper{
+  border-radius:14px !important;
+  box-shadow:0 6px 24px rgba(0,0,0,0.15) !important;
+  border:1px solid var(--border); padding:0 !important;
+}
+.leaflet-popup-content{ margin:0 !important; padding:0 !important; }
+.leaflet-popup-close-button{
+  color:#666 !important; top:10px !important;
+  right:10px !important; font-size:18px !important;
+}
+.pop-box{
+  padding:14px 16px; min-width:180px;
+  direction:rtl; text-align:right; font-family:'Tajawal','Inter',sans-serif;
+}
+html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
+.pop-city{ font-size:11px; font-weight:700; margin-bottom:3px; }
+.pop-name{ font-size:15px; font-weight:900; color:var(--t1); margin-bottom:10px; line-height:1.3; }
+.pop-note{ font-size:11px; color:var(--t3); margin-bottom:12px; }
+.pop-btn{
+  display:block; text-align:center;
+  background:var(--t1); color:#fff;
+  padding:9px 16px; border-radius:10px;
+  font-weight:700; font-size:13px;
+  text-decoration:none; font-family:inherit;
+}
+
+/* Legend & Filters */
+.map-legend{
+  max-width:960px; margin:12px auto 0; padding:0 16px;
+  display:flex; gap:16px; flex-wrap:wrap;
+}
+.leg-row{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--t2); font-weight:600; }
+.leg-dot{ width:11px; height:11px; border-radius:50%; flex-shrink:0; }
+
+.filters{
+  max-width:960px; margin:16px auto 0; padding:0 16px;
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.fb{
+  background:var(--surface); border:1.5px solid var(--border);
+  color:var(--t3); padding:8px 16px; border-radius:100px;
+  font-family:inherit; font-size:13px; font-weight:500;
+  cursor:pointer; white-space:nowrap;
+}
+.fb.on{ border-color:var(--gold); color:var(--gold); background:var(--gold-bg); font-weight:700; }
+
+/* CARDS */
+.wrap{ max-width:960px; margin:0 auto; padding:16px 16px 60px; }
+.city-sec{ margin-bottom:32px; }
+.ch{
+  display:flex; align-items:center; gap:10px;
+  padding-bottom:12px; border-bottom:2px solid var(--border);
+  margin-bottom:14px; flex-wrap:wrap;
+}
+.cbar{ width:4px; height:26px; border-radius:3px; flex-shrink:0; }
+.cinfo{ flex:1; min-width:0; }
+.cn{ font-size:17px; font-weight:800; color:var(--t1); }
+.cs{ font-size:12px; color:var(--t3); margin-top:1px; }
+.cbadge{
+  font-size:11px; font-weight:700; color:var(--gold);
+  background:var(--gold-bg); border:1px solid var(--gold-bdr);
+  padding:3px 10px; border-radius:100px; flex-shrink:0;
+}
+.cwa{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--green); color:#fff; border:none;
+  padding:7px 14px; border-radius:100px;
+  font-family:inherit; font-size:12px; font-weight:700;
+  cursor:pointer; flex-shrink:0;
+}
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px; }
+.card{
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--r); padding:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  transition:border-color .2s, box-shadow .2s;
+}
+.card.hi{ border-color:var(--gold); box-shadow:0 4px 20px rgba(184,150,46,0.2); }
+.cnum{ font-size:11px; color:var(--t3); font-weight:700; letter-spacing:.8px; margin-bottom:5px; }
+.cname{ font-size:17px; font-weight:800; color:var(--t1); margin-bottom:4px; }
+.cnote{
+  font-size:12px; color:var(--t3); background:var(--bg);
+  border:1px solid var(--border); display:inline-block;
+  padding:2px 9px; border-radius:100px; margin-bottom:14px; font-weight:500;
+}
+.acts{ display:flex; gap:8px; }
+.bgoto{
+  flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+  background:var(--t1); color:#fff; border:none; padding:11px 12px;
+  border-radius:10px; font-family:inherit; font-size:14px; font-weight:700;
+  cursor:pointer; text-decoration:none;
+}
+.bico{
+  width:40px; height:40px; border:1.5px solid var(--border);
+  border-radius:10px; background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; flex-shrink:0;
+}
+.bico svg{ width:16px; height:16px; }
+.bico.ok{ border-color:var(--gold); background:var(--gold-bg); }
+
+/* TOAST */
+.toast{
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  background:#111; color:#fff; padding:11px 22px; border-radius:100px;
+  font-size:14px; font-weight:700; opacity:0; transition:opacity .3s;
+  z-index:9999; pointer-events:none; white-space:nowrap;
+}
+.toast.on{ opacity:1; }
+.foot{
+  background:#1a1610; border-top:1px solid #2e2a22;
+  padding:18px; text-align:center; color:#555; font-size:12px;
+}
+
+@media(max-width:640px){
+  .hero h1{ font-size:21px; }
+  .stats{ display:grid; grid-template-columns:1fr 1fr; width:calc(100% - 32px); }
+  .stat{ border-left:none !important; border-right:none !important; border-top:1px solid #2e2a22; }
+  .stat:nth-child(odd){ border-right:1px solid #2e2a22 !important; }
+  .stat:first-child, .stat:nth-child(2){ border-top:none; }
+  .map-wrap{ height:320px; }
+  .grid{ grid-template-columns:1fr 1fr; }
+  .cname{ font-size:15px; }
+  .bgoto{ font-size:12px; padding:10px 8px; }
+  .bico{ width:36px; height:36px; }
+  .lang-btn{ top:10px; left:10px; padding:6px 12px; font-size:12px; }
+}
+@media(max-width:380px){ .grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<button class="lang-btn" onclick="toggleLang()">
+  <span style="font-size:15px">🌐</span><span id="langLabel">English</span>
+</button>
+
+<div class="hero">
+  <div class="tag" id="tagEl">📍 مواقع الفروع</div>
+  <h1><em id="h1a">فروع شركة تونة</em> <span id="h1b">في المملكة</span></h1>
+  <p id="heroP">اضغط على أي دبوس لعرض تفاصيل الفرع وفتح موقعه</p>
+  <div class="stats">
+    <div class="stat"><div class="sn">22</div><div class="sl" id="s1">فرع</div></div>
+    <div class="stat"><div class="sn">4</div><div class="sl" id="s2">مناطق</div></div>
+    <div class="stat"><div class="sn">24</div><div class="sl" id="s3">ساعة</div></div>
+    <div class="stat"><div class="sn">100%</div><div class="sl" id="s4">دقة الموقع</div></div>
+  </div>
+  <div class="top-btns">
+    <button class="btn-wa" onclick="shareAll()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span id="btnSA">مشاركة الكل</span>
+    </button>
+    <button class="btn-copy" onclick="copyAll()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e8c460" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <span id="btnCA">نسخ الروابط</span>
+    </button>
+  </div>
+</div>
+
+<!-- REAL INTERACTIVE MAP -->
+<div class="map-outer">
+  <div class="map-wrap">
+    <div id="map"></div>
+  </div>
+</div>
+
+<!-- Legend -->
+<div class="map-legend">
+  <div class="leg-row"><div class="leg-dot" style="background:var(--cr)"></div><span id="lg1">الرياض</span></div>
+  <div class="leg-row"><div class="leg-dot" style="background:var(--cj)"></div><span id="lg2">جدة</span></div>
+  <div class="leg-row"><div class="leg-dot" style="background:var(--ce)"></div><span id="lg3">المنطقة الشرقية</span></div>
+  <div class="leg-row"><div class="leg-dot" style="background:var(--cq)"></div><span id="lg4">القصيم</span></div>
+</div>
+
+<!-- Filters -->
+<div class="filters" id="filterRow"></div>
+
+<!-- Cards -->
+<div class="wrap" id="mainWrap"></div>
+
+<div class="foot" id="footEl">فروع شركة تونة في المملكة العربية السعودية — 22 فرع</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// DATA (Tuna Company Branches)
+const CC = { r:'#d4922a', j:'#2a7fd4', e:'#d4342a', q:'#2ab542' };
+const D = [
+  // فروع الرياض
+  {c:'r', ar:'الروابي',       en:'Al Rawabi',            x:{ar:'المطبخ المركزي',en:'Central Kitchen'},   lat:24.6853, lng:46.7820, url:'https://maps.app.goo.gl/cSVbX1vbYH3EgDae7'},
+  {c:'r', ar:'الوادي',        en:'Al Wadi',              x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7921, lng:46.6855, url:'https://maps.app.goo.gl/dVxnbbnrbjtpoq2e7'},
+  {c:'r', ar:'الملقا',        en:'Al Malqa',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8115, lng:46.6190, url:'https://goo.gl/maps/7Ws2Ey2dPYmFVuoD6'},
+  {c:'r', ar:'ظهرة لبن',      en:'Dhahrat Laban',        x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.6288, lng:46.5451, url:'https://maps.app.goo.gl/4X3GhE3WifFayMpKA'},
+  {c:'r', ar:'العليا',        en:'Al Olaya',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7083, lng:46.6800, url:'https://maps.app.goo.gl/e67afik6wArd5YxJ9'},
+  {c:'r', ar:'الخليج',        en:'Al Khaleej',           x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7610, lng:46.8052, url:'https://maps.app.goo.gl/19UhUJ95Pc9VBnCZ7'},
+  {c:'r', ar:'قرطبة',         en:'Qurtubah',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8012, lng:46.7325, url:'https://maps.app.goo.gl/ssR59WYxWV2rCSHB9'},
+  {c:'r', ar:'السويدي',       en:'Al Suwaidi',           x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.5821, lng:46.6710, url:'https://maps.app.goo.gl/UDAKieBcpbSbs5rJ9'},
+  {c:'r', ar:'الملك فهد',     en:'King Fahd',            x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7432, lng:46.6620, url:'https://maps.app.goo.gl/5jkPL9CJMUhM9DEw9'},
+  {c:'r', ar:'جرير الملز',    en:'Jarir Al Malaz',       x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.6651, lng:46.7330, url:'https://maps.app.goo.gl/cteqcAmTvvsN36y86'},
+  {c:'r', ar:'الياسمين',      en:'Al Yasmin',            x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8250, lng:46.6430, url:'https://maps.app.goo.gl/9SPxEk914DbyZPw79'},
+  {c:'r', ar:'العارض',        en:'Al Arid',              x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8510, lng:46.6210, url:'https://maps.app.goo.gl/9AXpKq7dd4E6d4BY7'},
+  
+  // فروع جدة
+  {c:'j', ar:'العزيزية',      en:'Al Aziziyah',          x:{ar:'ديليفري هيرو كيتشن',en:'DH Kitchen'},    lat:21.5580, lng:39.1980, url:'https://maps.app.goo.gl/Z7S7k81uSisyNzFu7'},
+  {c:'j', ar:'السامر',        en:'Al Samer',             x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.5890, lng:39.2320, url:'https://maps.app.goo.gl/8LJ8H5XxFr8su5jq6'},
+  {c:'j', ar:'الحمدانية',     en:'Al Hamdaniyah',        x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.7580, lng:39.1820, url:'https://maps.app.goo.gl/2YyLLWN7wnfxQt946'},
+  {c:'j', ar:'أبحر الجنوبية', en:'Abhur Al Janubiyah',   x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.7120, lng:39.1240, url:'https://maps.app.goo.gl/n5KDXXhvEY49qXCp6'},
+  {c:'j', ar:'النزهة',        en:'Al Nuzha',             x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.6020, lng:39.1720, url:'https://maps.app.goo.gl/ZkfYpo3V9afMeTFF7'},
+  
+  // فروع الشرقية
+  {c:'e', ar:'الروضة — الدمام',   en:'Al Rawdah — Dammam',    x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.4101, lng:50.0890, url:'https://maps.app.goo.gl/3aVowsAUBJ41iXrQ7'},
+  {c:'e', ar:'الزهور — الدمام',   en:'Al Zuhur — Dammam',     x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.4420, lng:50.1110, url:'https://goo.gl/maps/cz7i1NVbgZZdnBJH7'},
+  {c:'e', ar:'العقربية — الخبر',  en:'Al Aqrabiyah — Khobar', x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.2811, lng:50.1830, url:'https://maps.app.goo.gl/KEeLrZgmxpneazH4A'},
+  {c:'e', ar:'الهفوف — الرقيقة',  en:'Al Hofuf — Al Ruqaiqah',x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:25.3520, lng:49.5780, url:'https://maps.app.goo.gl/6YdeeAByJzJZQpy3A'},
+  
+  // فروع القصيم
+  {c:'q', ar:'بريدة — القصيم',    en:'Buraidah — Qassim',     x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.3592, lng:43.9818, url:'https://maps.app.goo.gl/oRRJjTPoQ5KAcjLS9'}
+];
+
+const CN = {
+  ar:{ r:'الرياض', j:'جدة', e:'المنطقة الشرقية', q:'القصيم' },
+  en:{ r:'Riyadh', j:'Jeddah', e:'Eastern Region', q:'Qassim' }
+};
+const META = {
+  r:{ ar:{sub:'المطبخ المركزي وكيتشن بارك',badge:'12 فرع'}, en:{sub:'Central Kitchen & Kitchen Park',badge:'12 Branches'} },
+  j:{ ar:{sub:'ديليفري هيرو كيتشن وكتيكت',badge:'5 فروع'},  en:{sub:'Delivery Hero Kitchen & Ctikit',badge:'5 Branches'} },
+  e:{ ar:{sub:'الدمام والخبر والهفوف',badge:'4 فروع'},        en:{sub:'Dammam, Khobar & Hofuf',badge:'4 Branches'} },
+  q:{ ar:{sub:'فرع بريدة — كيتشن بارك',badge:'1 فرع'},       en:{sub:'Buraidah — Kitchen Park',badge:'1 Branch'} }
+};
+const T = {
+  ar:{ tag:'📍 مواقع الفروع', h1a:'فروع شركة تونة', h1b:'في المملكة',
+       heroP:'اضغط على أي دبوس لعرض تفاصيل الفرع وفتح موقعه',
+       s1:'فرع', s2:'مناطق', s3:'ساعة', s4:'دقة الموقع',
+       sa:'مشاركة الكل', ca:'نسخ الروابط', open:'📍 فتح الموقع',
+       share:'مشاركة', brn:'فرع', openMap:'📍 فتح في الخريطة',
+       c1:'✓ تم نسخ الرابط', ca2:'✓ تم نسخ جميع الروابط',
+       foot:'فروع شركة تونة في المملكة العربية السعودية — 22 فرع',
+       lg:['الرياض','جدة','المنطقة الشرقية','القصيم'],
+       filters:['الكل (22)','🏙️ الرياض (12)','🌊 جدة (5)','⚡ الشرقية (4)','🌿 القصيم (1)'] },
+  en:{ tag:'📍 Branch Locations', h1a:'Tuna Company Branches', h1b:'in Saudi Arabia',
+       heroP:'Tap any pin to view branch details and open location',
+       s1:'Branches', s2:'Regions', s3:'Hours', s4:'Accuracy',
+       sa:'Share All', ca:'Copy Links', open:'📍 Open',
+       share:'Share', brn:'Branch', openMap:'📍 Open in Maps',
+       c1:'✓ Link copied', ca2:'✓ All links copied',
+       foot:'Tuna Company Branches in Saudi Arabia — 22 Branches',
+       lg:['Riyadh','Jeddah','Eastern Region','Qassim'],
+       filters:['All (22)','🏙️ Riyadh (12)','🌊 Jeddah (5)','⚡ Eastern (4)','🌿 Qassim (1)'] }
+};
+
+let lang = 'ar';
+
+// LEAFLET MAP
+const map = L.map('map', {
+  center: [24.0, 45.0],
+  zoom: 5,
+  zoomControl: false,
+  attributionControl: false,
+  tap: false,
+  dragging: true,
+  touchZoom: true,
+  scrollWheelZoom: true,
+  doubleClickZoom: true,
+  bounceAtZoomLimits: false,
+});
+
+L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 19, minZoom: 3 }
+).addTo(map);
+
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+function makeIcon(color) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">
+    <filter id="ds"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.35)"/></filter>
+    <path d="M16 0C7.16 0 0 7.16 0 16c0 10 16 26 16 26S32 26 32 16C32 7.16 24.84 0 16 0z" fill="${color}" filter="url(#ds)"/>
+    <circle cx="16" cy="16" r="7" fill="rgba(255,255,255,0.9)"/>
+  </svg>`;
+  return L.divIcon({
+    className: '',
+    html: svg,
+    iconSize: [32, 42],
+    iconAnchor: [16, 42],
+    popupAnchor: [0, -44]
+  });
+}
+
+const markers = [];
+D.forEach((b, i) => {
+  const mk = L.marker([b.lat, b.lng], { icon: makeIcon(CC[b.c]) }).addTo(map);
+  mk.branchIdx = i;
+  mk.on('click', () => {
+    const t = T[lang];
+    const name = lang === 'ar' ? b.ar : b.en;
+    const city = CN[lang][b.c];
+    const note = b.x[lang];
+    mk.bindPopup(`
+      <div class="pop-box">
+        <div class="pop-city" style="color:${CC[b.c]}">${city}</div>
+        <div class="pop-name">${name}</div>
+        <div class="pop-note">${note}</div>
+        <a class="pop-btn" href="${b.url}" onclick="safeOpen('${b.url}');return false;">${t.openMap}</a>
+      </div>`, { maxWidth: 220, closeButton: true }
+    ).openPopup();
+
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('hi'));
+    const card = document.getElementById('card_' + i);
+    if (card) {
+      card.classList.add('hi');
+      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
+    }
+  });
+  markers.push(mk);
+});
+
+function refreshPopups() {
+  markers.forEach((mk, i) => {
+    const b = D[i];
+    mk.unbindPopup();
+    const t = T[lang];
+    const name = lang === 'ar' ? b.ar : b.en;
+    const city = CN[lang][b.c];
+    const note = b.x[lang];
+    mk.bindPopup(`
+      <div class="pop-box">
+        <div class="pop-city" style="color:${CC[b.c]}">${city}</div>
+        <div class="pop-name">${name}</div>
+        <div class="pop-note">${note}</div>
+        <a class="pop-btn" href="${b.url}" onclick="safeOpen('${b.url}');return false;">${t.openMap}</a>
+      </div>`, { maxWidth: 220 }
+    );
+  });
+}
+
+// LANGUAGE
+function applyLang() {
+  const t = T[lang], isAr = lang === 'ar';
+  document.getElementById('root').lang = lang;
+  document.getElementById('root').dir = isAr ? 'rtl' : 'ltr';
+  document.getElementById('langLabel').textContent = isAr ? 'English' : 'عربي';
+  const ids = { tagEl:'tag', h1a:'h1a', h1b:'h1b', heroP:'heroP', s1:'s1', s2:'s2', s3:'s3', s4:'s4', btnSA:'sa', btnCA:'ca', footEl:'foot' };
+  for (const [id, key] of Object.entries(ids)) {
+    const el = document.getElementById(id); if (el) el.textContent = t[key];
+  }
+  ['lg1','lg2','lg3','lg4'].forEach((id, i) => {
+    const el = document.getElementById(id); if (el) el.textContent = t.lg[i];
+  });
+  refreshPopups();
+  buildFilters();
+  buildCards();
+}
+function toggleLang() { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(); }
+
+// ACTIONS
+function safeOpen(url) {
+  const a = document.createElement('a');
+  a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  a.style.display = 'none';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => document.body.removeChild(a), 100);
+}
+function openWA(text) { safeOpen('https://wa.me/?text=' + encodeURIComponent(text)); }
+
+function copyText(text, uid) {
+  const done = () => {
+    if (uid) {
+      const b = document.getElementById('cp' + uid);
+      if (b) { b.classList.add('ok'); setTimeout(() => b && b.classList.remove('ok'), 2000); }
+    }
+    showToast(T[lang].c1);
+  };
+  if (navigator.clipboard && window.isSecureContext)
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  else fallbackCopy(text, done);
+}
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+// FILTERS
+function buildFilters() {
+  const t = T[lang], row = document.getElementById('filterRow');
+  row.innerHTML = '';
+  ['all','r','j','e','q'].forEach((k, i) => {
+    const b = document.createElement('button');
+    b.className = 'fb' + (i === 0 ? ' on' : '');
+    b.textContent = t.filters[i];
+    b.onclick = () => {
+      document.querySelectorAll('.fb').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      document.querySelectorAll('.city-sec').forEach(s => {
+        s.style.display = (k === 'all' || s.dataset.c === k) ? 'block' : 'none';
+      });
+    };
+    row.appendChild(b);
+  });
+}
+
+// CARDS
+const COPY_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+const WA_SVG   = `<svg viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+
+function buildCards() {
+  const t = T[lang], wrap = document.getElementById('mainWrap');
+  wrap.innerHTML = ''; let num = 0;
+  ['r','j','e','q'].forEach(city => {
+    const m = META[city][lang], cn = CN[lang][city];
+    const sec = document.createElement('div');
+    sec.className = 'city-sec'; sec.dataset.c = city;
+    sec.innerHTML = `
+      <div class="ch">
+        <div class="cbar" style="background:${CC[city]}"></div>
+        <div class="cinfo"><div class="cn">${cn}</div><div class="cs">${m.sub}</div></div>
+        <span class="cbadge">${m.badge}</span>
+        <button class="cwa" onclick="shareCity('${city}')">
+          ${WA_SVG.replace('viewBox','width="13" height="13" viewBox')} ${t.share}
+        </button>
+      </div>
+      <div class="grid" id="g_${city}"></div>`;
+    wrap.appendChild(sec);
+    const grid = document.getElementById('g_' + city);
+    D.filter(b => b.c === city).forEach((b, i) => {
+      const globalIdx = D.indexOf(b);
+      num++;
+      const name = lang === 'ar' ? b.ar : b.en, note = b.x[lang];
+      const d = document.createElement('div');
+      d.className = 'card'; d.id = 'card_' + globalIdx;
+      d.innerHTML = `
+        <div class="cnum">${t.brn} ${String(num).padStart(2,'0')}</div>
+        <div class="cname">${name}</div>
+        <span class="cnote">${note}</span>
+        <div class="acts">
+          <a class="bgoto" href="${b.url}" onclick="safeOpen('${b.url}');return false;">${t.open}</a>
+          <button class="bico" onclick="zoomTo(${globalIdx})" title="${lang==='ar'?'عرض على الخريطة':'Show on map'}" style="font-size:18px">📍</button>
+          <button class="bico" onclick="shareOne('${name}','${b.url}')">${WA_SVG}</button>
+          <button class="bico" id="cp${globalIdx}" onclick="copyText('${b.url}','${globalIdx}')">${COPY_SVG}</button>
+        </div>`;
+      grid.appendChild(d);
+    });
+  });
+}
+
+function zoomTo(idx) {
+  const b = D[idx];
+  map.flyTo([b.lat, b.lng], 15, { animate: true, duration: 1.2 });
+  setTimeout(() => markers[idx].fire('click'), 1300);
+  document.querySelector('.map-outer').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// SHARE
+function shareOne(n, url) { openWA(`📍 *فرع شركة تونة - ${n}*\n\n${url}`); }
+function shareCity(city) {
+  const list = D.filter(b => b.c === city), isAr = lang === 'ar';
+  let m = `📍 *${isAr?'فروع شركة تونة في':'Tuna Company Branches in'} ${CN[lang][city]}*\n\n`;
+  list.forEach((b,i) => { m += `${i+1}. *${lang==='ar'?b.ar:b.en}*\n${b.url}\n\n`; });
+  openWA(m.trim());
+}
+function shareAll() {
+  const isAr = lang === 'ar';
+  let m = `📍 *${isAr?'جميع فروع شركة تونة في المملكة العربية السعودية':'All Tuna Company Branches in Saudi Arabia'}*\n\n`;
+  ['r','j','e','q'].forEach(c => {
+    m += `━━ *${CN[lang][c]}* ━━\n`;
+    D.filter(b => b.c === c).forEach((b,i) => { m += `${i+1}. ${lang==='ar'?b.ar:b.en} — ${b.url}\n`; });
+    m += '\n';
+  });
+  openWA(m.trim());
+}
+function copyAll() {
+  const isAr = lang === 'ar';
+  let m = `📍 ${isAr?'جميع فروع شركة تونة في المملكة العربية السعودية':'All Tuna Company Branches in Saudi Arabia'}\n\n`;
+  ['r','j','e','q'].forEach(c => {
+    m += `— ${CN[lang][c]} —\n`;
+    D.filter(b => b.c === c).forEach((b,i) => { m += `${i+1}. ${lang==='ar'?b.ar:b.en}: ${b.url}\n`; });
+    m += '\n';
+  });
+  const done = () => showToast(T[lang].ca2);
+  if (navigator.clipboard && window.isSecureContext)
+    navigator.clipboard.writeText(m.trim()).then(done).catch(() => fallbackCopy(m.trim(), done));
+  else fallbackCopy(m.trim(), done);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 2300);
+}
+
+// INIT
+buildFilters();
+buildCards();
+setTimeout(() => map.invalidateSize(), 300);
+</script>
+</body>
+</html>
