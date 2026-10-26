@@ -17,7 +17,7 @@
   --bg:#f7f6f2; --surface:#fff; --border:#e8e4dc;
   --t1:#111; --t2:#444; --t3:#888;
   --gold:#b8962e; --gold-bg:#fdf6e3; --gold-bdr:#e5d090;
-  --green:#25D366; --r:14px;
+  --green:#25D366; --red:#e53935; --r:14px;
   --cr:#d4922a; --cj:#2a7fd4; --ce:#d4342a; --cq:#2ab542;
 }
 *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -25,7 +25,6 @@ html[dir=rtl] body { font-family:'Tajawal',sans-serif; }
 html[dir=ltr] body { font-family:'Inter',sans-serif; }
 body { background:var(--bg); color:var(--t1); min-height:100vh; }
 
-/* LANG BTN */
 .lang-btn{
   position:fixed; top:14px; left:14px; z-index:9000;
   background:rgba(255,255,255,0.97); border:1.5px solid var(--border);
@@ -36,7 +35,6 @@ body { background:var(--bg); color:var(--t1); min-height:100vh; }
   font-family:inherit; display:flex; align-items:center; gap:6px;
 }
 
-/* HERO */
 .hero{ background:#1a1610; padding:44px 20px 30px; text-align:center; }
 .tag{
   display:inline-block; background:rgba(184,150,46,0.18);
@@ -72,43 +70,38 @@ html[dir=ltr] .stat:last-child{ border-right:none; }
   font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;
 }
 
-/* MAP */
 .map-outer{ max-width:960px; margin:24px auto 0; padding:0 16px; }
 .map-wrap{
   border-radius:16px; overflow:hidden;
   border:1px solid var(--border);
   box-shadow:0 4px 24px rgba(0,0,0,0.10);
-  height:440px; position:relative;
+  height:460px; position:relative;
 }
 #map{ width:100%; height:100%; display:block; }
 
 .leaflet-popup-content-wrapper{
   border-radius:14px !important;
-  box-shadow:0 6px 24px rgba(0,0,0,0.15) !important;
+  box-shadow:0 6px 24px rgba(0,0,0,0.2) !important;
   border:1px solid var(--border); padding:0 !important;
 }
 .leaflet-popup-content{ margin:0 !important; padding:0 !important; }
-.leaflet-popup-close-button{
-  color:#666 !important; top:10px !important;
-  right:10px !important; font-size:18px !important;
-}
 .pop-box{
-  padding:14px 16px; min-width:180px;
+  padding:16px; min-width:210px;
   direction:rtl; text-align:right; font-family:'Tajawal','Inter',sans-serif;
 }
 html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
-.pop-city{ font-size:11px; font-weight:700; margin-bottom:3px; }
-.pop-name{ font-size:15px; font-weight:900; color:var(--t1); margin-bottom:10px; line-height:1.3; }
-.pop-note{ font-size:11px; color:var(--t3); margin-bottom:12px; }
+.pop-city{ font-size:11px; font-weight:700; color:var(--red); margin-bottom:3px; }
+.pop-name{ font-size:16px; font-weight:900; color:var(--t1); margin-bottom:6px; line-height:1.3; }
+.pop-note{ font-size:12px; color:var(--t3); margin-bottom:14px; }
 .pop-btn{
-  display:block; text-align:center;
-  background:var(--t1); color:#fff;
-  padding:9px 16px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  background:var(--red); color:#fff;
+  padding:10px 16px; border-radius:10px;
   font-weight:700; font-size:13px;
   text-decoration:none; font-family:inherit;
+  box-shadow:0 4px 12px rgba(229,57,53,0.3);
 }
 
-/* Legend & Filters */
 .map-legend{
   max-width:960px; margin:12px auto 0; padding:0 16px;
   display:flex; gap:16px; flex-wrap:wrap;
@@ -128,7 +121,6 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
 }
 .fb.on{ border-color:var(--gold); color:var(--gold); background:var(--gold-bg); font-weight:700; }
 
-/* CARDS */
 .wrap{ max-width:960px; margin:0 auto; padding:16px 16px 60px; }
 .city-sec{ margin-bottom:32px; }
 .ch{
@@ -159,7 +151,7 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
   box-shadow:0 2px 12px rgba(0,0,0,0.06);
   transition:border-color .2s, box-shadow .2s;
 }
-.card.hi{ border-color:var(--gold); box-shadow:0 4px 20px rgba(184,150,46,0.2); }
+.card.hi{ border-color:var(--red); box-shadow:0 4px 20px rgba(229,57,53,0.25); }
 .cnum{ font-size:11px; color:var(--t3); font-weight:700; letter-spacing:.8px; margin-bottom:5px; }
 .cname{ font-size:17px; font-weight:800; color:var(--t1); margin-bottom:4px; }
 .cnote{
@@ -170,8 +162,8 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
 .acts{ display:flex; gap:8px; }
 .bgoto{
   flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
-  background:var(--t1); color:#fff; border:none; padding:11px 12px;
-  border-radius:10px; font-family:inherit; font-size:14px; font-weight:700;
+  background:var(--red); color:#fff; border:none; padding:11px 12px;
+  border-radius:100px; font-family:inherit; font-size:13px; font-weight:700;
   cursor:pointer; text-decoration:none;
 }
 .bico{
@@ -183,7 +175,6 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
 .bico svg{ width:16px; height:16px; }
 .bico.ok{ border-color:var(--gold); background:var(--gold-bg); }
 
-/* TOAST */
 .toast{
   position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
   background:#111; color:#fff; padding:11px 22px; border-radius:100px;
@@ -202,7 +193,7 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
   .stat{ border-left:none !important; border-right:none !important; border-top:1px solid #2e2a22; }
   .stat:nth-child(odd){ border-right:1px solid #2e2a22 !important; }
   .stat:first-child, .stat:nth-child(2){ border-top:none; }
-  .map-wrap{ height:320px; }
+  .map-wrap{ height:350px; }
   .grid{ grid-template-columns:1fr 1fr; }
   .cname{ font-size:15px; }
   .bgoto{ font-size:12px; padding:10px 8px; }
@@ -221,7 +212,7 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
 <div class="hero">
   <div class="tag" id="tagEl">📍 مواقع الفروع</div>
   <h1><em id="h1a">فروع شركة تونة</em> <span id="h1b">في المملكة</span></h1>
-  <p id="heroP">اضغط على أي دبوس لعرض تفاصيل الفرع وفتح موقعه</p>
+  <p id="heroP">اضغط على أي موقع على الخريطة لعرض تفاصيله والانتقال إليه مباشرة</p>
   <div class="stats">
     <div class="stat"><div class="sn">22</div><div class="sl" id="s1">فرع</div></div>
     <div class="stat"><div class="sn">4</div><div class="sl" id="s2">مناطق</div></div>
@@ -269,34 +260,34 @@ html[dir=ltr] .pop-box{ direction:ltr; text-align:left; }
 const CC = { r:'#d4922a', j:'#2a7fd4', e:'#d4342a', q:'#2ab542' };
 const D = [
   // فروع الرياض
-  {c:'r', ar:'الروابي',       en:'Al Rawabi',            x:{ar:'المطبخ المركزي',en:'Central Kitchen'},   lat:24.6853, lng:46.7820, url:'https://maps.app.goo.gl/cSVbX1vbYH3EgDae7'},
-  {c:'r', ar:'الوادي',        en:'Al Wadi',              x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7921, lng:46.6855, url:'https://maps.app.goo.gl/dVxnbbnrbjtpoq2e7'},
-  {c:'r', ar:'الملقا',        en:'Al Malqa',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8115, lng:46.6190, url:'https://goo.gl/maps/7Ws2Ey2dPYmFVuoD6'},
-  {c:'r', ar:'ظهرة لبن',      en:'Dhahrat Laban',        x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.6288, lng:46.5451, url:'https://maps.app.goo.gl/4X3GhE3WifFayMpKA'},
-  {c:'r', ar:'العليا',        en:'Al Olaya',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7083, lng:46.6800, url:'https://maps.app.goo.gl/e67afik6wArd5YxJ9'},
-  {c:'r', ar:'الخليج',        en:'Al Khaleej',           x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7610, lng:46.8052, url:'https://maps.app.goo.gl/19UhUJ95Pc9VBnCZ7'},
-  {c:'r', ar:'قرطبة',         en:'Qurtubah',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8012, lng:46.7325, url:'https://maps.app.goo.gl/ssR59WYxWV2rCSHB9'},
-  {c:'r', ar:'السويدي',       en:'Al Suwaidi',           x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.5821, lng:46.6710, url:'https://maps.app.goo.gl/UDAKieBcpbSbs5rJ9'},
-  {c:'r', ar:'الملك فهد',     en:'King Fahd',            x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7432, lng:46.6620, url:'https://maps.app.goo.gl/5jkPL9CJMUhM9DEw9'},
-  {c:'r', ar:'جرير الملز',    en:'Jarir Al Malaz',       x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.6651, lng:46.7330, url:'https://maps.app.goo.gl/cteqcAmTvvsN36y86'},
-  {c:'r', ar:'الياسمين',      en:'Al Yasmin',            x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8250, lng:46.6430, url:'https://maps.app.goo.gl/9SPxEk914DbyZPw79'},
-  {c:'r', ar:'العارض',        en:'Al Arid',              x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8510, lng:46.6210, url:'https://maps.app.goo.gl/9AXpKq7dd4E6d4BY7'},
+  {c:'r', ar:'الروابي',       en:'Al Rawabi',            x:{ar:'المطبخ المركزي',en:'Central Kitchen'},   lat:24.6853, lng:46.7820, url:'https://www.google.com/maps/dir/?api=1&destination=24.6853,46.7820'},
+  {c:'r', ar:'الوادي',        en:'Al Wadi',              x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7921, lng:46.6855, url:'https://www.google.com/maps/dir/?api=1&destination=24.7921,46.6855'},
+  {c:'r', ar:'الملقا',        en:'Al Malqa',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8115, lng:46.6190, url:'https://www.google.com/maps/dir/?api=1&destination=24.8115,46.6190'},
+  {c:'r', ar:'ظهرة لبن',      en:'Dhahrat Laban',        x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.6288, lng:46.5451, url:'https://www.google.com/maps/dir/?api=1&destination=24.6288,46.5451'},
+  {c:'r', ar:'العليا',        en:'Al Olaya',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7083, lng:46.6800, url:'https://www.google.com/maps/dir/?api=1&destination=24.7083,46.6800'},
+  {c:'r', ar:'الخليج',        en:'Al Khaleej',           x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7610, lng:46.8052, url:'https://www.google.com/maps/dir/?api=1&destination=24.7610,46.8052'},
+  {c:'r', ar:'قرطبة',         en:'Qurtubah',             x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8012, lng:46.7325, url:'https://www.google.com/maps/dir/?api=1&destination=24.8012,46.7325'},
+  {c:'r', ar:'السويدي',       en:'Al Suwaidi',           x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.5821, lng:46.6710, url:'https://www.google.com/maps/dir/?api=1&destination=24.5821,46.6710'},
+  {c:'r', ar:'الملك فهد',     en:'King Fahd',            x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.7432, lng:46.6620, url:'https://www.google.com/maps/dir/?api=1&destination=24.7432,46.6620'},
+  {c:'r', ar:'جرير الملز',    en:'Jarir Al Malaz',       x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.6651, lng:46.7330, url:'https://www.google.com/maps/dir/?api=1&destination=24.6651,46.7330'},
+  {c:'r', ar:'الياسمين',      en:'Al Yasmin',            x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8250, lng:46.6430, url:'https://www.google.com/maps/dir/?api=1&destination=24.8250,46.6430'},
+  {c:'r', ar:'العارض',        en:'Al Arid',              x:{ar:'كيتشن بارك',en:'Kitchen Park'},          lat:24.8510, lng:46.6210, url:'https://www.google.com/maps/dir/?api=1&destination=24.8510,46.6210'},
   
-  // فروع جدة
-  {c:'j', ar:'العزيزية',      en:'Al Aziziyah',          x:{ar:'ديليفري هيرو كيتشن',en:'DH Kitchen'},    lat:21.5580, lng:39.1980, url:'https://maps.app.goo.gl/Z7S7k81uSisyNzFu7'},
-  {c:'j', ar:'السامر',        en:'Al Samer',             x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.5890, lng:39.2320, url:'https://maps.app.goo.gl/8LJ8H5XxFr8su5jq6'},
-  {c:'j', ar:'الحمدانية',     en:'Al Hamdaniyah',        x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.7580, lng:39.1820, url:'https://maps.app.goo.gl/2YyLLWN7wnfxQt946'},
-  {c:'j', ar:'أبحر الجنوبية', en:'Abhur Al Janubiyah',   x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.7120, lng:39.1240, url:'https://maps.app.goo.gl/n5KDXXhvEY49qXCp6'},
-  {c:'j', ar:'النزهة',        en:'Al Nuzha',             x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.6020, lng:39.1720, url:'https://maps.app.goo.gl/ZkfYpo3V9afMeTFF7'},
+  // فروع جدة (فرع العزيزية بدقة الإحداثيات المرفقة 21.548631, 39.212844)
+  {c:'j', ar:'العزيزية',      en:'Al Aziziyah',          x:{ar:'حي العزيزية - دليفري هيرو كيتشن',en:'Al Aziziyah - Delivery Hero Kitchen'}, lat:21.548631, lng:39.212844, url:'https://www.google.com/maps/dir/?api=1&destination=21.548631,39.212844'},
+  {c:'j', ar:'السامر',        en:'Al Samer',             x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.5890, lng:39.2320, url:'https://www.google.com/maps/dir/?api=1&destination=21.5890,39.2320'},
+  {c:'j', ar:'الحمدانية',     en:'Al Hamdaniyah',        x:{ar:'مبنى كتيكت',en:'Ctikit Building'},       lat:21.7580, lng:39.1820, url:'https://www.google.com/maps/dir/?api=1&destination=21.7580,39.1820'},
+  {c:'j', ar:'أبحر الجنوبية', en:'Abhur Al Janubiyah',   x:{ar:'طريق المدينة، أمام كبري أبحر',en:'Madinah Road, Obhur Bridge'}, lat:21.7120, lng:39.1240, url:'https://www.google.com/maps/dir/?api=1&destination=21.7120,39.1240'},
+  {c:'j', ar:'النزهة',        en:'Al Nuzha',             x:{ar:'شارع حراء، حي النزهة',en:'Hira St, Al Nuzha'}, lat:21.6020, lng:39.1720, url:'https://www.google.com/maps/dir/?api=1&destination=21.6020,39.1720'},
   
   // فروع الشرقية
-  {c:'e', ar:'الروضة — الدمام',   en:'Al Rawdah — Dammam',    x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.4101, lng:50.0890, url:'https://maps.app.goo.gl/3aVowsAUBJ41iXrQ7'},
-  {c:'e', ar:'الزهور — الدمام',   en:'Al Zuhur — Dammam',     x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.4420, lng:50.1110, url:'https://goo.gl/maps/cz7i1NVbgZZdnBJH7'},
-  {c:'e', ar:'العقربية — الخبر',  en:'Al Aqrabiyah — Khobar', x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.2811, lng:50.1830, url:'https://maps.app.goo.gl/KEeLrZgmxpneazH4A'},
-  {c:'e', ar:'الهفوف — الرقيقة',  en:'Al Hofuf — Al Ruqaiqah',x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:25.3520, lng:49.5780, url:'https://maps.app.goo.gl/6YdeeAByJzJZQpy3A'},
+  {c:'e', ar:'الروضة — الدمام',   en:'Al Rawdah — Dammam',    x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.4101, lng:50.0890, url:'https://www.google.com/maps/dir/?api=1&destination=26.4101,50.0890'},
+  {c:'e', ar:'الزهور — الدمام',   en:'Al Zuhur — Dammam',     x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.4420, lng:50.1110, url:'https://www.google.com/maps/dir/?api=1&destination=26.4420,50.1110'},
+  {c:'e', ar:'العقربية — الخبر',  en:'Al Aqrabiyah — Khobar', x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.2811, lng:50.1830, url:'https://www.google.com/maps/dir/?api=1&destination=26.2811,50.1830'},
+  {c:'e', ar:'الهفوف — الرقيقة',  en:'Al Hofuf — Al Ruqaiqah',x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:25.3520, lng:49.5780, url:'https://www.google.com/maps/dir/?api=1&destination=25.3520,49.5780'},
   
   // فروع القصيم
-  {c:'q', ar:'بريدة — القصيم',    en:'Buraidah — Qassim',     x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.3592, lng:43.9818, url:'https://maps.app.goo.gl/oRRJjTPoQ5KAcjLS9'}
+  {c:'q', ar:'بريدة — القصيم',    en:'Buraidah — Qassim',     x:{ar:'كيتشن بارك',en:'Kitchen Park'},   lat:26.3592, lng:43.9818, url:'https://www.google.com/maps/dir/?api=1&destination=26.3592,43.9818'}
 ];
 
 const CN = {
@@ -311,19 +302,19 @@ const META = {
 };
 const T = {
   ar:{ tag:'📍 مواقع الفروع', h1a:'فروع شركة تونة', h1b:'في المملكة',
-       heroP:'اضغط على أي دبوس لعرض تفاصيل الفرع وفتح موقعه',
+       heroP:'اضغط على أي دبوس أحمر لعرض الموقع والتوجه إليه فوراً',
        s1:'فرع', s2:'مناطق', s3:'ساعة', s4:'دقة الموقع',
-       sa:'مشاركة الكل', ca:'نسخ الروابط', open:'📍 فتح الموقع',
-       share:'مشاركة', brn:'فرع', openMap:'📍 فتح في الخريطة',
+       sa:'مشاركة الكل', ca:'نسخ الروابط', open:'📍 الاتجاهات والمسار',
+       share:'مشاركة', brn:'فرع', openMap:'📍 فتح الاتجاهات والمسار',
        c1:'✓ تم نسخ الرابط', ca2:'✓ تم نسخ جميع الروابط',
        foot:'فروع شركة تونة في المملكة العربية السعودية — 22 فرع',
        lg:['الرياض','جدة','المنطقة الشرقية','القصيم'],
        filters:['الكل (22)','🏙️ الرياض (12)','🌊 جدة (5)','⚡ الشرقية (4)','🌿 القصيم (1)'] },
   en:{ tag:'📍 Branch Locations', h1a:'Tuna Company Branches', h1b:'in Saudi Arabia',
-       heroP:'Tap any pin to view branch details and open location',
+       heroP:'Click any red pin to view location & navigate directly',
        s1:'Branches', s2:'Regions', s3:'Hours', s4:'Accuracy',
-       sa:'Share All', ca:'Copy Links', open:'📍 Open',
-       share:'Share', brn:'Branch', openMap:'📍 Open in Maps',
+       sa:'Share All', ca:'Copy Links', open:'📍 Directions',
+       share:'Share', brn:'Branch', openMap:'📍 Get Directions in Maps',
        c1:'✓ Link copied', ca2:'✓ All links copied',
        foot:'Tuna Company Branches in Saudi Arabia — 22 Branches',
        lg:['Riyadh','Jeddah','Eastern Region','Qassim'],
@@ -353,48 +344,61 @@ L.tileLayer(
 
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-function makeIcon(color) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">
-    <filter id="ds"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.35)"/></filter>
-    <path d="M16 0C7.16 0 0 7.16 0 16c0 10 16 26 16 26S32 26 32 16C32 7.16 24.84 0 16 0z" fill="${color}" filter="url(#ds)"/>
-    <circle cx="16" cy="16" r="7" fill="rgba(255,255,255,0.9)"/>
+// إنشاء دبوس الخريطة الأحمر الطبيعي والاحترافي (Classic Red Pin)
+function createRedPin() {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="46" viewBox="0 0 36 46">
+    <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="rgba(0,0,0,0.4)"/></filter>
+    <path d="M18 0C8.059 0 0 8.059 0 18c0 13.5 18 28 18 28s18-14.5 18-28C36 8.059 27.941 0 18 0z" fill="#e53935" filter="url(#shadow)"/>
+    <circle cx="18" cy="18" r="7.5" fill="#ffffff"/>
   </svg>`;
   return L.divIcon({
     className: '',
     html: svg,
-    iconSize: [32, 42],
-    iconAnchor: [16, 42],
-    popupAnchor: [0, -44]
+    iconSize: [36, 46],
+    iconAnchor: [18, 46],
+    popupAnchor: [0, -46]
   });
 }
 
+const redPinIcon = createRedPin();
 const markers = [];
+
 D.forEach((b, i) => {
-  const mk = L.marker([b.lat, b.lng], { icon: makeIcon(CC[b.c]) }).addTo(map);
+  const mk = L.marker([b.lat, b.lng], { icon: redPinIcon }).addTo(map);
   mk.branchIdx = i;
   mk.on('click', () => {
-    const t = T[lang];
-    const name = lang === 'ar' ? b.ar : b.en;
-    const city = CN[lang][b.c];
-    const note = b.x[lang];
-    mk.bindPopup(`
-      <div class="pop-box">
-        <div class="pop-city" style="color:${CC[b.c]}">${city}</div>
-        <div class="pop-name">${name}</div>
-        <div class="pop-note">${note}</div>
-        <a class="pop-btn" href="${b.url}" onclick="safeOpen('${b.url}');return false;">${t.openMap}</a>
-      </div>`, { maxWidth: 220, closeButton: true }
-    ).openPopup();
-
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('hi'));
-    const card = document.getElementById('card_' + i);
-    if (card) {
-      card.classList.add('hi');
-      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
-    }
+    selectBranchOnMap(i);
   });
   markers.push(mk);
 });
+
+function selectBranchOnMap(i) {
+  const b = D[i];
+  const mk = markers[i];
+  const t = T[lang];
+  const name = lang === 'ar' ? b.ar : b.en;
+  const city = CN[lang][b.c];
+  const note = b.x[lang];
+
+  map.flyTo([b.lat, b.lng], 16, { animate: true, duration: 1.2 });
+
+  mk.bindPopup(`
+    <div class="pop-box">
+      <div class="pop-city">📍 ${city}</div>
+      <div class="pop-name">${name}</div>
+      <div class="pop-note">${note}</div>
+      <a class="pop-btn" href="${b.url}" target="_blank" onclick="safeOpen('${b.url}');return false;">
+        <span>🧭</span> <span>${t.openMap}</span>
+      </a>
+    </div>`, { maxWidth: 240, closeButton: true }
+  ).openPopup();
+
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('hi'));
+  const card = document.getElementById('card_' + i);
+  if (card) {
+    card.classList.add('hi');
+  }
+}
 
 function refreshPopups() {
   markers.forEach((mk, i) => {
@@ -406,11 +410,13 @@ function refreshPopups() {
     const note = b.x[lang];
     mk.bindPopup(`
       <div class="pop-box">
-        <div class="pop-city" style="color:${CC[b.c]}">${city}</div>
+        <div class="pop-city">📍 ${city}</div>
         <div class="pop-name">${name}</div>
         <div class="pop-note">${note}</div>
-        <a class="pop-btn" href="${b.url}" onclick="safeOpen('${b.url}');return false;">${t.openMap}</a>
-      </div>`, { maxWidth: 220 }
+        <a class="pop-btn" href="${b.url}" target="_blank" onclick="safeOpen('${b.url}');return false;">
+          <span>🧭</span> <span>${t.openMap}</span>
+        </a>
+      </div>`, { maxWidth: 240 }
     );
   });
 }
@@ -517,7 +523,7 @@ function buildCards() {
         <div class="cname">${name}</div>
         <span class="cnote">${note}</span>
         <div class="acts">
-          <a class="bgoto" href="${b.url}" onclick="safeOpen('${b.url}');return false;">${t.open}</a>
+          <a class="bgoto" href="${b.url}" target="_blank" onclick="safeOpen('${b.url}');return false;">${t.open}</a>
           <button class="bico" onclick="zoomTo(${globalIdx})" title="${lang==='ar'?'عرض على الخريطة':'Show on map'}" style="font-size:18px">📍</button>
           <button class="bico" onclick="shareOne('${name}','${b.url}')">${WA_SVG}</button>
           <button class="bico" id="cp${globalIdx}" onclick="copyText('${b.url}','${globalIdx}')">${COPY_SVG}</button>
@@ -528,9 +534,7 @@ function buildCards() {
 }
 
 function zoomTo(idx) {
-  const b = D[idx];
-  map.flyTo([b.lat, b.lng], 15, { animate: true, duration: 1.2 });
-  setTimeout(() => markers[idx].fire('click'), 1300);
+  selectBranchOnMap(idx);
   document.querySelector('.map-outer').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
